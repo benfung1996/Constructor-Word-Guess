@@ -6,8 +6,8 @@ function WordToGuess() {
     this.pushToArray = function(currentWord) {
         for (var i = 0; i<currentWord.length; i++) {
             if (currentWord[i] !== " ") {
-                var letterObject = new Letter(currentWord[i]);
-                this.letterArray.psuh(letterObject);
+                var letterObject = new Letter(currentWord[i]).display();
+                this.letterArray.push(letterObject);
             }
             else {
                 this.letterArray.push(" ");
