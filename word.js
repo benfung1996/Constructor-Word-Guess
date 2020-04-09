@@ -2,7 +2,6 @@ var Letter = require("./letter");
 
 function Word() {
     this.letterArray = [];
-    
     this.pushToArray = function(currentWord) {
         for (var i = 0; i<currentWord.length; i++) {
             if (currentWord[i] !== " ") {
@@ -17,7 +16,7 @@ function Word() {
 
     this.displayWord = function() {
         var word = [];
-        for (var i = 0; i < letterArray.length; i++) {
+        for (var i = 0; i < this.letterArray.length; i++) {
             if (this.letterArray[i] !== " ") {
                 var string = this.letterArray[i].display();
                 word.push(string);
@@ -26,19 +25,25 @@ function Word() {
                 word.push(" ");
             };
         };
-        console.log(letterArray.join(" "));
+        console.log(word.join(" "));
     };
 
     this.checkGuess = function(input) {
-        for (var i = 0; i < letterArray.length; i++) {
+        var correctGuess = false;
+        for (var i = 0; i < this.letterArray.length; i++) {
             if (this.letterArray[i] !== " ") {
                 if (this.letterArray[i].check(input)) {
-                    return true;
-                } else {
-                    return false;
-                };
-            };
-        };
+                    correctGuess = true;
+                } 
+            }
+        }
+
+        if (correctGuess) {
+            return true;
+        }
+        else {
+            return false;
+        }
     };
 
 

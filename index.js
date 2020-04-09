@@ -4,7 +4,7 @@ var inquirer = require("inquirer");
 var wordArray = ["siberian husky", "labrador retriever", "pomeranian", "golden retriever", "shiba inu", "samoyed", "welsh corgi"];
 var currentWord = "";
 
-var alphabet = /a-zA-Z/;
+var alphabet = /[a-zA-Z]/;
 var remainingGuess = 10;
 var guessedLetter = [];
 var usedWords = [];
@@ -12,7 +12,7 @@ var firstGame = true;
 
 function randomWord() {
     var randomPick = wordArray[Math.floor(Math.random()*wordArray.length)];
-    if (usedWords.indexOf(randomPick) === -1 ) {
+    if (usedWords.indexOf(randomPick) === -1) {
         currentWord = new Word();
         currentWord.pushToArray(randomPick);
         usedWords.push(randomPick);
@@ -20,23 +20,20 @@ function randomWord() {
     else if (usedWords.length !== wordArray.length) {
         randomWord();
     }
-    else {
-        console.log("No more word to guess!")
-        playAgain();
-    }
+   
 };
 
 function wordGuessed() {
     var word = currentWord.letterArray;
     for (var i = 0; i < word.length; i++) {
-        if (!word[i].guesssed && word[i] !== " ") {
+        if (!word[i].guessed && word[i] !== " ") {
             return false;
         }
     }
     return true;
 };
 
-function prompt() {
+function guessPrompt() {
     if (remainingGuess <= 0) {
         console.log("GAME OVER!");
         playAgain();
@@ -44,10 +41,9 @@ function prompt() {
     else if (!wordGuessed()) {
         if (firstGame) {
             console.log("Guess a dog breed!");
-            currentWord.dispalyWord();
+            currentWord.displayWord();
             firstGame = false;
         }
-
         inquirer.prompt([
             {
                 type: "input",
@@ -63,14 +59,14 @@ function prompt() {
                         return true;
                     }
                     else {
-                        console.log("Please enter a single letter.");
+                        console.log("\nPlease enter a single letter.");
                         return false;
                     }
                 }
             }
         ]). then(function(userInput) { 
             currentWord.checkGuess(userInput.guess);
-            currentWord.dispalyWord();
+            currentWord.displayWord();
             if (currentWord.checkGuess(userInput.guess)) {
                 console.log("Correct!");
             }
@@ -79,7 +75,7 @@ function prompt() {
                 console.log("Incorrect! Remaining Guess: " + remainingGuess + "!");
             }
             guessedLetter.push(userInput.guess.trim().toLowerCase());
-            prompt();
+            guessPrompt();
         })
     }
     else {
@@ -91,11 +87,15 @@ function prompt() {
 function nextWord() {
     if (usedWords.length === wordArray.length) {
         usedWords = [];
+        console.log("No more word to guess!")
         playAgain();
     }
     else {
-        randomPick();
-        prompt();
+        guessedLetter = [];
+        remainingGuess = 10;
+        randomWord();
+        currentWord.displayWord();
+        guessPrompt();
     }
 };
 
@@ -113,8 +113,8 @@ function playAgain() {
             guessedLetter = [];
             usedWords = [];
             remainingGuess = 10;
-            randomPick();
-            prompt();
+            randomWord();
+            guessPrompt();
         }
         else {
             console.log("Good Game!");
@@ -122,5 +122,5 @@ function playAgain() {
     })
 };
 
-randomPick();
-prompt();
+randomWord();
+guessPrompt();
